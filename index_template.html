@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Noughts and Crosses</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #111111;
+      color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 24px 32px;
+      overflow-y: auto;
+    }
+
+    @media (min-height: 900px) {
+      body {
+        align-items: center;
+      }
+    }
+
+    .game-container {
+      width: 420px;
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .game-card {
+      width: 420px;
+      height: 670px;
+      background: #181818;
+      border: 1px solid #2a2a2a;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      height: 42px;
+      margin: 0 0 20px;
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      text-align: center;
+      line-height: 42px;
+      flex: 0 0 auto;
+    }
+
+    .mode-buttons {
+      height: 44px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex: 0 0 auto;
+    }
+
+    .mode-buttons button {
+      height: 44px;
+      border: 1px solid #333333;
+      background: #202020;
+      color: #f4f4f4;
+      padding: 0 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mode-buttons button:hover {
+      background: #2a2a2a;
+      border-color: #4a4a4a;
+    }
+
+    .button-text {
+      line-height: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status-panel {
+      height: 72px;
+      margin-bottom: 22px;
+      text-align: center;
+      line-height: 1.5;
+      font-size: 17px;
+      color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .mode-label {
+      display: inline-block;
+      background: #000000;
+      color: #ffffff;
+      border: 1px solid #333333;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 16px;
+      white-space: nowrap;
+    }
+
+    .board {
+      width: 354px;
+      height: 354px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .board button {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #333333;
+      border-radius: 18px;
+      background: #202020;
+      color: #f4f4f4;
+      font-size: 42px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .board button:hover {
+      background: #292929;
+      border-color: #555555;
+    }
+
+    .board button.x-mark,
+    .board button.o-mark {
+      color: #ef4444;
+    }
+
+    .stats-block {
+      width: 200px;
+      position: absolute;
+      top: 0;
+      left: calc(100% + 14px);
+      background: #181818;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.28);
+      flex: 0 0 auto;
+    }
+
+    .stats-heading {
+      margin: 0 0 12px;
+      color: #f4f4f4;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 16px;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .stats-panel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .stat-card {
+      min-height: 70px;
+      border: 1px solid #2f2f2f;
+      background: #141414;
+      border-radius: 14px;
+      padding: 10px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      overflow: hidden;
+    }
+
+    .stat-value {
+      display: block;
+      color: #f4f4f4;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 28px;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .stat-label {
+      display: block;
+      color: #777777;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 12px;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: normal;
+    }
+
+
+    @media (max-width: 720px) {
+      .game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .stats-block {
+        width: 420px;
+        position: static;
+      }
+
+      .stats-panel {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-card {
+        min-height: 58px;
+      }
+    }
+
+    .footer-note {
+      height: 32px;
+      margin: 20px 0 0;
+      color: #686868;
+      font-size: 12px;
+      text-align: center;
+      line-height: 16px;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="game-container">
+    <section class="game-card">
+      <h1>Noughts and Crosses</h1>
+
+      <div class="mode-buttons">
+        <button onclick="startGame('friend')">
+          <span class="button-text">Play Friend</span>
+        </button>
+
+        <button onclick="startGame('computer')">
+          <span class="button-text">Play Computer</span>
+        </button>
+      </div>
+
+      <div id="status" class="status-panel">Choose game mode!</div>
+
+
+      <div class="board">
+        <button onclick="makeMove('A1')" id="A1"></button>
+        <button onclick="makeMove('B1')" id="B1"></button>
+        <button onclick="makeMove('C1')" id="C1"></button>
+
+        <button onclick="makeMove('A2')" id="A2"></button>
+        <button onclick="makeMove('B2')" id="B2"></button>
+        <button onclick="makeMove('C2')" id="C2"></button>
+
+        <button onclick="makeMove('A3')" id="A3"></button>
+        <button onclick="makeMove('B3')" id="B3"></button>
+        <button onclick="makeMove('C3')" id="C3"></button>
+      </div>
+
+      <p class="footer-note">The computer uses minimax to calculate its moves... usually.</p>
+    </section>
+
+    <section class="stats-block" aria-label="Computer mode game statistics">
+      <h2 class="stats-heading">COMPUTER-MODE STATS</h2>
+
+      <div class="stats-panel">
+        <div class="stat-card">
+          <span class="stat-label">GAMES PLAYED</span>
+          <span id="games-played" class="stat-value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">USER WON</span>
+          <span id="user-wins" class="stat-value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">COMPUTER WON</span>
+          <span id="computer-wins" class="stat-value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">DRAWS</span>
+          <span id="draws" class="stat-value">0</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE_URL = "__API_BASE_URL__";
+
+    const board = {
+      A1: " ", B1: " ", C1: " ",
+      A2: " ", B2: " ", C2: " ",
+      A3: " ", B3: " ", C3: " "
+    };
+
+    const winningLines = [
+      ["A1", "B1", "C1"],
+      ["A2", "B2", "C2"],
+      ["A3", "B3", "C3"],
+
+      ["A1", "A2", "A3"],
+      ["B1", "B2", "B3"],
+      ["C1", "C2", "C3"],
+
+      ["A1", "B2", "C3"],
+      ["C1", "B2", "A3"]
+    ];
+
+    const SECOND_BEST_MOVE_CHANCE = 0.07;
+
+    let currentPlayer = "X";
+    let gameMode = null;
+    let gameOver = false;
+    let waitingForComputer = false;
+    let computerTimerId = null;
+
+    function isApiConfigured() {
+      return API_BASE_URL.startsWith("https://");
+    }
+
+    function renderStats(stats) {
+      document.getElementById("games-played").textContent = stats.gamesPlayed ?? 0;
+      document.getElementById("user-wins").textContent = stats.userWins ?? 0;
+      document.getElementById("computer-wins").textContent = stats.computerWins ?? 0;
+      document.getElementById("draws").textContent = stats.draws ?? 0;
+    }
+
+    function showStatsMessage(message) {
+      console.warn(message);
+    }
+
+    async function loadStats() {
+      if (!isApiConfigured()) {
+        showStatsMessage("Stats API not configured yet");
+        return;
+      }
+
+      try {
+        const response = await fetch(API_BASE_URL + "/stats");
+
+        if (!response.ok) {
+          throw new Error("Failed to load stats");
+        }
+
+        const stats = await response.json();
+        renderStats(stats);
+      } catch (error) {
+        console.error(error);
+        showStatsMessage("Stats unavailable");
+      }
+    }
+
+    async function recordGameResult(result) {
+      if (!isApiConfigured()) {
+        return;
+      }
+
+      try {
+        const response = await fetch(API_BASE_URL + "/result", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ result: result })
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to save result");
+        }
+
+        const stats = await response.json();
+        renderStats(stats);
+      } catch (error) {
+        console.error(error);
+        showStatsMessage("Stats update failed");
+      }
+    }
+
+    function updateStatus(turnText) {
+      const modeText = gameMode === "friend" ? "Friend Mode" : "Computer Mode";
+
+      document.getElementById("status").innerHTML =
+        '<span class="mode-label">' + modeText + '</span>' +
+        '<span>' + turnText + '</span>';
+    }
+
+    function getDisplayedMark(player) {
+      return player;
+    }
+
+    function getMarkClass(player) {
+      if (player === "X") {
+        return "x-mark";
+      }
+
+      if (player === "O") {
+        return "o-mark";
+      }
+
+      return "";
+    }
+
+    function startGame(mode) {
+      gameMode = mode;
+      currentPlayer = "X";
+      gameOver = false;
+      waitingForComputer = false;
+
+      if (computerTimerId !== null) {
+        clearTimeout(computerTimerId);
+        computerTimerId = null;
+      }
+
+      for (const position in board) {
+        board[position] = " ";
+
+        const square = document.getElementById(position);
+        square.textContent = "";
+        square.classList.remove("x-mark", "o-mark");
+      }
+
+      if (gameMode === "friend") {
+        updateStatus("X's turn");
+      } else {
+        updateStatus("Your turn");
+      }
+    }
+
+    function makeMove(position) {
+      if (gameMode === null) {
+        alert("Choose a game mode first.");
+        return;
+      }
+
+      if (gameOver) {
+        alert("The game is over. Start a new game.");
+        return;
+      }
+
+      if (waitingForComputer) {
+        return;
+      }
+
+      if (board[position] !== " ") {
+        alert("Invalid move, try again.");
+        return;
+      }
+
+      board[position] = currentPlayer;
+
+      const square = document.getElementById(position);
+      square.textContent = getDisplayedMark(currentPlayer);
+
+      const markClass = getMarkClass(currentPlayer);
+      if (markClass !== "") {
+        square.classList.add(markClass);
+      }
+
+      if (handleGameResult()) {
+        return;
+      }
+
+      if (gameMode === "friend") {
+        switchPlayer();
+        updateStatus(currentPlayer + "'s turn");
+      } else {
+        currentPlayer = "O";
+        waitingForComputer = true;
+        updateStatus("Computer's turn");
+
+        computerTimerId = setTimeout(function () {
+          if (gameOver || gameMode !== "computer") {
+            return;
+          }
+
+          computerMove();
+          waitingForComputer = false;
+          computerTimerId = null;
+
+          if (handleGameResult()) {
+            return;
+          }
+
+          currentPlayer = "X";
+          updateStatus("Your turn");
+        }, 1000);
+      }
+    }
+
+    function switchPlayer() {
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+    }
+
+    function computerMove() {
+      const move = chooseComputerMove();
+
+      if (move !== null) {
+        board[move] = "O";
+
+        const square = document.getElementById(move);
+        square.textContent = "O";
+        square.classList.add("o-mark");
+      }
+    }
+
+    function chooseComputerMove() {
+      const rankedMoves = rankComputerMoves();
+
+      if (rankedMoves.length === 0) {
+        return null;
+      }
+
+      const bestMove = rankedMoves[0].position;
+      const secondBestMove = findSecondBestMove(rankedMoves);
+
+      const shouldMakeSecondBestMove =
+        secondBestMove !== null && Math.random() < SECOND_BEST_MOVE_CHANCE;
+
+      if (shouldMakeSecondBestMove) {
+        return secondBestMove;
+      }
+
+      return bestMove;
+    }
+
+    function rankComputerMoves() {
+      const rankedMoves = [];
+
+      for (const position of getEmptySquares()) {
+        board[position] = "O";
+        const score = minimax(false, 0);
+        board[position] = " ";
+
+        rankedMoves.push({
+          position: position,
+          score: score
+        });
+      }
+
+      rankedMoves.sort(function (a, b) {
+        return b.score - a.score;
+      });
+
+      return rankedMoves;
+    }
+
+    function findSecondBestMove(rankedMoves) {
+      if (rankedMoves.length < 2) {
+        return null;
+      }
+
+      const bestScore = rankedMoves[0].score;
+
+      for (const move of rankedMoves) {
+        if (move.score < bestScore) {
+          return move.position;
+        }
+      }
+
+      return null;
+    }
+
+    function minimax(isMaximizing, depth) {
+      const winner = getWinner();
+
+      if (winner === "O") {
+        return 10 - depth;
+      }
+
+      if (winner === "X") {
+        return depth - 10;
+      }
+
+      if (getEmptySquares().length === 0) {
+        return 0;
+      }
+
+      if (isMaximizing) {
+        let bestScore = -Infinity;
+
+        for (const position of getEmptySquares()) {
+          board[position] = "O";
+          const score = minimax(false, depth + 1);
+          board[position] = " ";
+          bestScore = Math.max(bestScore, score);
+        }
+
+        return bestScore;
+      } else {
+        let bestScore = Infinity;
+
+        for (const position of getEmptySquares()) {
+          board[position] = "X";
+          const score = minimax(true, depth + 1);
+          board[position] = " ";
+          bestScore = Math.min(bestScore, score);
+        }
+
+        return bestScore;
+      }
+    }
+
+    function getWinner() {
+      for (const line of winningLines) {
+        const [a, b, c] = line;
+
+        if (
+          board[a] !== " " &&
+          board[a] === board[b] &&
+          board[b] === board[c]
+        ) {
+          return board[a];
+        }
+      }
+
+      return null;
+    }
+
+    function getEmptySquares() {
+      const emptySquares = [];
+
+      for (const position in board) {
+        if (board[position] === " ") {
+          emptySquares.push(position);
+        }
+      }
+
+      return emptySquares;
+    }
+
+    function handleGameResult() {
+      const winner = getWinner();
+
+      if (winner !== null) {
+        gameOver = true;
+        waitingForComputer = false;
+
+        if (gameMode === "computer") {
+          if (winner === "X") {
+            updateStatus("You win!");
+            recordGameResult("user");
+          } else {
+            updateStatus("Computer wins!");
+            recordGameResult("computer");
+          }
+        } else {
+          if (winner === "X") {
+            updateStatus("X wins!");
+          } else {
+            updateStatus("O wins!");
+          }
+        }
+
+        return true;
+      }
+
+      if (getEmptySquares().length === 0) {
+        gameOver = true;
+        waitingForComputer = false;
+        updateStatus("It's a draw!");
+
+        if (gameMode === "computer") {
+          recordGameResult("draw");
+        }
+
+        return true;
+      }
+
+      return false;
+    }
+
+    window.addEventListener("DOMContentLoaded", loadStats);
+  </script>
+</body>
+</html>
