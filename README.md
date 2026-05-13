@@ -12,12 +12,6 @@ Live deployment: <https://d2mrwywexba4ua.cloudfront.net>
 
 ## Architecture
 
-<p align="center">
-  <img src="figures/noughts-and-crosses-diagram.svg" alt="Architecture diagram showing CloudFront, S3, API Gateway, Lambda, and DynamoDB.">
-  <br>
-  <em>Figure 2: Architecture diagram.</em>
-</p>
-
 - Amazon S3 stores the static website files
 - Amazon CloudFront serves the site over HTTPS
 - CloudFront Origin Access Control keeps the S3 bucket private
@@ -25,3 +19,9 @@ Live deployment: <https://d2mrwywexba4ua.cloudfront.net>
 - AWS Lambda handles game statistics requests
 - Amazon DynamoDB stores game statistics
 - Terraform provisions the AWS infrastructure
+
+<p align="center">
+  <img src="figures/noughts-and-crosses-diagram.svg" alt="Architecture diagram showing CloudFront, S3, API Gateway, Lambda, and DynamoDB.">
+  <br>
+  <em>Figure 2: Architecture diagram.</em>
+</p>
