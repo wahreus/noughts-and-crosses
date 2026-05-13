@@ -4,6 +4,12 @@ A browser-based noughts and crosses (tic tac toe) game deployed to AWS with Terr
 
 Live CloudFront deployment: <https://d2mrwywexba4ua.cloudfront.net>
 
+<p align="center">
+  <img src="figures/noughts-and-crosses-screenshot.png" alt="Screenshot of live deployment.">
+  <br>
+  <em>Figure 1: Screenshot of the live deployment.</em>
+</p>
+
 ## Architecture
 
 - S3 stores the static website files
