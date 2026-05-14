@@ -1,24 +1,33 @@
 # ⭕ Noughts and Crosses ❌
 
-A browser-based noughts and crosses (tic tac toe) game deployed to AWS with Terraform. The app is hosted as a static website using a private S3 bucket, CloudFront for public HTTPS delivery, and a serverless backend for storing game statistics.
+A browser-based noughts and crosses (tic tac toe) game deployed to AWS with Terraform. The app is deployed as a static website with secure public access and a lightweight backend for storing game statistics.
 
-Live deployment: <https://d2mrwywexba4ua.cloudfront.net>
+**Features**
+
+- Play against another player on the same device
+- Play against the computer
+- Computer mode uses minimax-based move selection
+- Game statistics are tracked through a backend API
+- Infrastructure is fully deployed with Terraform
+
+**Live deployment** 
+
+- <https://d2mrwywexba4ua.cloudfront.net>
+- Figure 1 shows the deployed game running in the browser.
 
 <p align="center">
-  <img src="figures/noughts-and-crosses-screenshot.png" alt="Screenshot of live noughts and crosses deployment.">
+  <img src="figures/noughts-and-crosses-screenshot.png" alt="Screenshot of the live noughts and crosses deployment.">
   <br>
-  <em>Figure 1: Screenshot of live deployment.</em>
+  <em>Figure 1: Screenshot of the live deployment.</em>
 </p>
 
 ## Architecture
 
-- Amazon S3 stores the static website files
-- Amazon CloudFront serves the site over HTTPS
-- CloudFront Origin Access Control keeps the S3 bucket private
-- Amazon API Gateway exposes the backend API
-- AWS Lambda handles game statistics requests
-- Amazon DynamoDB stores game statistics
-- Terraform provisions the AWS infrastructure
+Users access the game through CloudFront, which serves the static frontend from a private S3 bucket. The bucket is not publicly accessible directly; access is restricted through Origin Access Control.
+
+Game statistics are handled separately by a small serverless backend. The frontend sends requests to API Gateway, which invokes a Lambda function. The function reads and updates statistics stored in DynamoDB.
+
+An overview of the AWS services used is shown in Figure 2.
 
 <p align="center">
   <img src="figures/noughts-and-crosses-diagram.svg" alt="Architecture diagram showing CloudFront, S3, API Gateway, Lambda, and DynamoDB.">
