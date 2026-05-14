@@ -13,7 +13,7 @@ A browser-based noughts and crosses (tic tac toe) game deployed to AWS with Terr
 **Live deployment** 
 
 - <https://d2mrwywexba4ua.cloudfront.net>
-- Figure 1 shows the deployed game running in the browser.
+- Figure 1 shows the deployed game running in the browser
 
 <p align="center">
   <img src="figures/noughts-and-crosses-screenshot.png" alt="Screenshot of the live noughts and crosses deployment.">
@@ -23,9 +23,7 @@ A browser-based noughts and crosses (tic tac toe) game deployed to AWS with Terr
 
 ## Architecture
 
-Users access the game through CloudFront, which serves the static frontend from a private S3 bucket. The bucket is not publicly accessible directly; access is restricted through Origin Access Control.
-
-Game statistics are handled separately by a small serverless backend. The frontend sends requests to API Gateway, which invokes a Lambda function. The function reads and updates statistics stored in DynamoDB.
+Users access the game through CloudFront, which serves the static frontend from a private S3 bucket. The bucket is not publicly accessible directly, access is restricted through Origin Access Control. Game statistics are handled separately by a small serverless backend. The frontend sends requests to API Gateway, which invokes a Lambda function. The function reads and updates statistics stored in DynamoDB.
 
 An overview of the AWS services used is shown in Figure 2.
 
