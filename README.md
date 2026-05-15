@@ -34,3 +34,16 @@ An overview of the AWS services used is shown in Figure 2.
   <br>
   <em>Figure 2: Architecture diagram.</em>
 </p>
+
+## Deployment Procedure
+
+Deployment is automated through the `deploy.sh` script.
+
+The script:
+
+- Initializes and applies the Terraform configuration
+- Reads Terraform outputs such as the API URL, frontend bucket name, CloudFront distribution ID, and CloudFront URL
+- Generates `index.html` from `index_template.html`
+- Replaces the `__API_BASE_URL__` placeholder with the deployed API Gateway URL
+- Uploads the generated frontend file to the S3 bucket
+- Creates a CloudFront invalidation so the latest version is served
