@@ -52,7 +52,7 @@ Prerequisites:
 
 - Terraform
 - AWS CLI
-- Configured AWS credentials.
+- Configured AWS credentials
 
 To deploy the project from the repository root:
 
