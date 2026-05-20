@@ -35,7 +35,7 @@ An overview of the AWS services used is shown in Figure 2.
   <em>Figure 2: Architecture diagram.</em>
 </p>
 
-## Deployment Procedure
+## Deployment procedure
 
 Deployment is automated through the `deploy.sh` script.
 
