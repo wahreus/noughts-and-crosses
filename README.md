@@ -1,4 +1,4 @@
-# ⭕ Noughts and Crosses ❌
+# ⭕ Noughts and Crosses
 
 A browser-based noughts and crosses (tic tac toe) game deployed to AWS with Terraform. The app is deployed as a static website with secure public access and a lightweight backend for storing game statistics.
 
