@@ -48,13 +48,14 @@ The script:
 - Uploads the generated frontend file to the S3 bucket
 - Creates a CloudFront invalidation so the latest version is served
 
-Prerequisites:
-
-- Terraform
-- AWS CLI
-- Configured AWS credentials
-
 To deploy the project from the repository root:
 
 ```bash
 ./deploy.sh
+```
+
+**Prerequisites**
+
+- Terraform installed
+- AWS account with permissions for S3, CloudFront, API Gateway, Lambda, DynamoDB, and IAM
+- AWS CLI installed and configured
